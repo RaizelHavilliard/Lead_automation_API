@@ -1,0 +1,11 @@
+name,email,company
+John Doe,john@example.com,Acme Inc
+Jane Smith,jane@example,Google
+Ali Rezaei, ali.rezaei@gmail.com ,StartupX
+Sara Connor,SARA.CONNOR@skynet.com,Skynet
+Duplicate Test,john@example.com,Acme Inc
+Empty Email,,NoEmailCorp
+Whitespace Test,   whitespace@test.com   ,SpaceCorp
+Uppercase Duplicate,SARA.CONNOR@skynet.com,Skynet
+Valid Two,valid.two@company.org,CompanyOrg
+Invalid Domain,test@invalid_domain,FakeCorp

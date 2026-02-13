@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+pandas
+email-validator
+python-multipart
