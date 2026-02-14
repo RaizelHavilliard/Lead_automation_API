@@ -7,25 +7,21 @@ DOWNLOAD_URL = "https://lead-automation-api-2e5g.onrender.com/download"
 
 
 def upload_file(request):
+
+    try:
+        requests.get("https://lead-automation-api-2e5g.onrender.com/docs", timeout=60)
+    except:
+        pass  # فقط برای wake-up
+
     if request.method == "POST":
         file = request.FILES["file"]
 
         try:
-            files = {
-                "file": (file.name, file.read(), "text/csv")
-            }
-
-            upload_response = requests.post(
-                UPLOAD_URL,
-                files=files,
-                timeout=120
-            )
+            files = {"file": (file.name, file, "text/csv")}
+            upload_response = requests.post(UPLOAD_URL, files=files, timeout=120)
             upload_response.raise_for_status()
 
-            download_response = requests.get(
-                DOWNLOAD_URL,
-                timeout=120
-            )
+            download_response = requests.get(DOWNLOAD_URL, timeout=120)
             download_response.raise_for_status()
 
         except requests.exceptions.RequestException as e:
@@ -34,9 +30,7 @@ def upload_file(request):
         return HttpResponse(
             download_response.content,
             content_type="text/csv",
-            headers={
-                "Content-Disposition": "attachment; filename=cleaned.csv"
-            }
+            headers={"Content-Disposition": "attachment; filename=cleaned.csv"}
         )
 
     return render(request, "uploader/upload.html")
