@@ -11,7 +11,7 @@ def upload_file(request):
     try:
         requests.get("https://lead-automation-api-2e5g.onrender.com/docs", timeout=60)
     except:
-        pass  # فقط برای wake-up
+        pass 
 
     if request.method == "POST":
         file = request.FILES["file"]
