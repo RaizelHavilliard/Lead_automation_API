@@ -11,7 +11,7 @@ UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 
-@app.post("/upload")
+@app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
     if not file.filename.endswith(".csv"):
         raise HTTPException(status_code=400, detail="Only CSV files allowed")
@@ -39,3 +39,5 @@ def download_clean_file():
         media_type="text/csv",
         filename="clean_leads.csv"
     )
+
+
