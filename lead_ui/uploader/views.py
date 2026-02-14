@@ -12,10 +12,16 @@ def upload_file(request):
         try:
             upload_response = requests.post(
                 UPLOAD_URL,
-                files={"file": file},
-                timeout=60
-            )
-            upload_response.raise_for_status()
+                files = {
+                    "file": (file.name, file.read(), "text/csv")
+                }
+
+                upload_response = requests.post(
+                    UPLOAD_URL,
+                    files=files,
+                    timeout=120
+                )
+
 
             download_response = requests.get(
                 DOWNLOAD_URL,
