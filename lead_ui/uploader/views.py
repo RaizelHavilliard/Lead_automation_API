@@ -5,27 +5,26 @@ from django.http import HttpResponse
 UPLOAD_URL = "https://lead-automation-api-2e5g.onrender.com/upload/"
 DOWNLOAD_URL = "https://lead-automation-api-2e5g.onrender.com/download"
 
+
 def upload_file(request):
     if request.method == "POST":
         file = request.FILES["file"]
 
         try:
+            files = {
+                "file": (file.name, file.read(), "text/csv")
+            }
+
             upload_response = requests.post(
                 UPLOAD_URL,
-                files = {
-                    "file": (file.name, file.read(), "text/csv")
-                }
-
-                upload_response = requests.post(
-                    UPLOAD_URL,
-                    files=files,
-                    timeout=120
-                )
-
+                files=files,
+                timeout=120
+            )
+            upload_response.raise_for_status()
 
             download_response = requests.get(
                 DOWNLOAD_URL,
-                timeout=60
+                timeout=120
             )
             download_response.raise_for_status()
 
