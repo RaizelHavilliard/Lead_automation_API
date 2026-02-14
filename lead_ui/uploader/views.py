@@ -7,24 +7,35 @@ DOWNLOAD_URL = "https://lead-automation-api-2e5g.onrender.com/download"
 
 
 def upload_file(request):
-    print("View called")  # مرحله 1
+    print("View called")
     if request.method == "POST":
-        print("POST request received")  # مرحله 2
+        print("POST request received")
+        file = request.FILES.get("file")
+        if not file:
+            return HttpResponse("هیچ فایلی انتخاب نشده.", status=400)
+
         try:
-            file = request.FILES["file"]
-            print(f"File received: {file.name}")  # مرحله 3
             files = {"file": (file.name, file, "text/csv")}
             upload_response = requests.post(UPLOAD_URL, files=files, timeout=120)
-            print("Upload response received")  # مرحله 4
             upload_response.raise_for_status()
 
             download_response = requests.get(DOWNLOAD_URL, timeout=120)
             download_response.raise_for_status()
-            print("Download response received")  # مرحله 5
 
+        except requests.exceptions.Timeout:
+            return HttpResponse(
+                "ارتباط با API طول کشید و timeout شد. لطفاً دوباره تلاش کنید.",
+                status=504
+            )
+        except requests.exceptions.ConnectionError:
+            return HttpResponse(
+                "ارتباط با API برقرار نشد. سرور ممکن است خاموش باشد.",
+                status=503
+            )
+        except requests.exceptions.HTTPError as e:
+            return HttpResponse(f"HTTP Error: {e.response.status_code}", status=e.response.status_code)
         except Exception as e:
-            print(f"Exception: {e}")  # مرحله 6
-            return HttpResponse(f"API Error: {e}", status=500)
+            return HttpResponse(f"خطای غیرمنتظره: {e}", status=500)
 
         return HttpResponse(
             download_response.content,
@@ -33,4 +44,3 @@ def upload_file(request):
         )
 
     return render(request, "uploader/upload.html")
-
