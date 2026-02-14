@@ -5,21 +5,25 @@ from django.http import HttpResponse
 UPLOAD_URL = "https://lead-automation-api-2e5g.onrender.com/upload/"
 DOWNLOAD_URL = "https://lead-automation-api-2e5g.onrender.com/download"
 
-
 def upload_file(request):
-    print("View called")
     if request.method == "POST":
-        print("POST request received")
         file = request.FILES.get("file")
         if not file:
             return HttpResponse("هیچ فایلی انتخاب نشده.", status=400)
 
+        # مرحله 1: Wake-up سرور Render
         try:
+            requests.get("https://lead-automation-api-2e5g.onrender.com/docs", timeout=60)
+        except:
+            pass  # اگر GET fail شد، ادامه میدیم و POST رو امتحان می‌کنیم
+
+        try:
+            # مرحله 2: آپلود فایل با stream
             files = {"file": (file.name, file, "text/csv")}
-            upload_response = requests.post(UPLOAD_URL, files=files, timeout=120)
+            upload_response = requests.post(UPLOAD_URL, files=files, timeout=300)
             upload_response.raise_for_status()
 
-            download_response = requests.get(DOWNLOAD_URL, timeout=120)
+            download_response = requests.get(DOWNLOAD_URL, timeout=300)
             download_response.raise_for_status()
 
         except requests.exceptions.Timeout:
