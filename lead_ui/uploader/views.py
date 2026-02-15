@@ -17,7 +17,6 @@ def upload_file(request):
             pass 
 
         try:
-            # مرحله 2: آپلود فایل با stream
             files = {"file": (file.name, file, "text/csv")}
             upload_response = requests.post(UPLOAD_URL, files=files, timeout=300)
             upload_response.raise_for_status()
