@@ -34,7 +34,15 @@ This API automates:
 * Uvicorn
 
 ---
+### 🏗 Architecture Overview
 
+- FastAPI → processing engine
+- Pandas → data cleaning
+- Email-validator → RFC-compliant validation
+- Django → frontend client
+- Render → cloud deployment
+
+---
 ### 📂 CSV Format
 
 ```
@@ -65,6 +73,13 @@ Response:
 Download cleaned CSV file.
 
 ---
+### 🌍 Live Deployment
+
+API is deployed on Render:
+https://lead-automation-api-2e5g.onrender.com/docs
+
+Django frontend acts as a separate client service.
+
 
 ### ▶ Run Locally
 
