@@ -9,13 +9,12 @@ def upload_file(request):
     if request.method == "POST":
         file = request.FILES.get("file")
         if not file:
-            return HttpResponse("هیچ فایلی انتخاب نشده.", status=400)
+            return HttpResponse("No file has been choosen.", status=400)
 
-        # مرحله 1: Wake-up سرور Render
         try:
             requests.get("https://lead-automation-api-2e5g.onrender.com/docs", timeout=60)
         except:
-            pass  # اگر GET fail شد، ادامه میدیم و POST رو امتحان می‌کنیم
+            pass 
 
         try:
             # مرحله 2: آپلود فایل با stream
@@ -28,18 +27,18 @@ def upload_file(request):
 
         except requests.exceptions.Timeout:
             return HttpResponse(
-                "ارتباط با API طول کشید و timeout شد. لطفاً دوباره تلاش کنید.",
+                "Conection to the API timeout",
                 status=504
             )
         except requests.exceptions.ConnectionError:
             return HttpResponse(
-                "ارتباط با API برقرار نشد. سرور ممکن است خاموش باشد.",
+                "Conection to the API didn't succeed",
                 status=503
             )
         except requests.exceptions.HTTPError as e:
             return HttpResponse(f"HTTP Error: {e.response.status_code}", status=e.response.status_code)
         except Exception as e:
-            return HttpResponse(f"خطای غیرمنتظره: {e}", status=500)
+            return HttpResponse(f"Unexcepted Error : {e}", status=500)
 
         return HttpResponse(
             download_response.content,
